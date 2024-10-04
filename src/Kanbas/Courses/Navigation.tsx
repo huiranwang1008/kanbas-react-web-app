@@ -1,17 +1,38 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 export default function CoursesNavigation() {
+  const location = useLocation(); 
+
   return (
-    <div id="wd-courses-navigation">
-      <Link id="wd-course-home-link"    to="/Kanbas/Courses/1234/Home">Home</Link><br/>
-      <Link id="wd-course-modules-link" to="/Kanbas/Courses/1234/Modules">Modules
-        </Link><br/>
-      <Link id="wd-course-piazza-link"  to="/Kanbas/Courses/1234/Piazza">Piazza</Link><br/>
-      <Link id="wd-course-zoom-link"    to="/Kanbas/Courses/1234/Zoom">Zoom</Link><br/>
-      <Link id="wd-course-quizzes-link" to="/Kanbas/Courses/1234/Assignments">
-          Assignments</Link><br/>
-      <Link id="wd-course-assignments-link" to="/Kanbas/Courses/1234/Quizzes">Quizzes
-        </Link><br/>
-      <Link id="wd-course-grades-link"  to="/Kanbas/Courses/1234/Grades">Grades</Link><br/>
-      <Link id="wd-course-people-link"  to="/Kanbas/People">People</Link><br/>
+    <div id="wd-courses-navigation" className="list-group wd fs-5 rounded-0">
+      <Link to="Home"
+        className={`list-group-item border-0 ${location.pathname.includes('Home') ? 'active' : ''}`}>
+        Home
+      </Link><br />
+      <Link to="Modules"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('Modules') ? 'active' : ''}`}>
+        Modules
+      </Link><br />
+      <Link to="Piazza"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('Piazza') ? 'active' : ''}`}>
+        Piazza
+      </Link><br />
+      <Link to="Zoom"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('Zoom') ? 'active' : ''}`}>
+        Zoom
+      </Link><br />
+      <Link to="Assignments"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('Assignments') ? 'active' : ''}`}>
+        Assignments
+      </Link><br />
+      <Link to="Quizzes"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('Quizzes') ? 'active' : ''}`}>
+        Quizzes
+      </Link><br />
+      <Link to="People"
+        className={`list-group-item text-danger border-0 ${location.pathname.includes('People') ? 'active' : ''}`}>
+        People
+      </Link><br />
     </div>
-);}
+  );
+}
