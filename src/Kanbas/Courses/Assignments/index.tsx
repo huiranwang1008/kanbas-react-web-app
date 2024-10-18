@@ -3,9 +3,23 @@ import { FaPlus, FaSearch } from "react-icons/fa";
 import { MdEditNote } from "react-icons/md"; 
 import GreenCheckmark from "./GreenCheckmark";
 import { PiDotsSixVerticalBold } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import * as db from "../../Database"; 
 
 export default function Assignments() {
+  const { cid } = useParams(); 
+
+  const assignments = db.assignments.filter((assignment) => assignment.course === cid);
+
+  const getModulesText = (assignmentId: string) => {
+    const relatedModules = db.modules.filter((module) =>
+      module.course === cid && 
+      module.lessons && 
+      module.lessons.some((lesson) => lesson.module === assignmentId)
+    );
+    return relatedModules.map(module => module.name).join(", ");
+  };
+
   return (
     <div id="wd-assignments" className="container">
       {/* Search and Buttons */}
@@ -47,86 +61,37 @@ export default function Assignments() {
 
       {/* Assignment List */}
       <ul className="list-group rounded-0">
-        {/* Assignment 1 */}
-        <li className="list-group-item p-3 d-flex justify-content-between align-items-center"
-            style={{ borderLeft: '5px solid green' }}>
-          <div className="d-flex align-items-center">
-            <PiDotsSixVerticalBold style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <MdEditNote style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <div>
-            <li className="wd-assignment-list-item">
-              <a className="wd-assignment-link"
-                href="#/Kanbas/Courses/Assignments/Editor">
-                A1
-              </a>
-            </li>
-              <div className="text-muted">
-                <span style={{ color: 'red' }}>Multiple Modules</span> | <b>Not available until</b> May 6 at 12:00am <br />
-                <b>Due</b> May 13 at 11:59pm | 100 pts
+        {assignments.length > 0 ? (
+          assignments.map((assignment) => (
+            <li key={assignment._id} className="list-group-item p-3 d-flex justify-content-between align-items-center"
+                style={{ borderLeft: '5px solid green' }}>
+              <div className="d-flex align-items-center">
+                <PiDotsSixVerticalBold style={{ marginRight: '10px', fontSize: '1.5rem' }} />
+                <MdEditNote style={{ marginRight: '10px', fontSize: '1.5rem' }} />
+                <div>
+                  <li className="wd-assignment-list-item">
+                  <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} className="wd-assignment-link">
+                    {assignment.title}
+                  </Link>
+                  </li>
+                  <div className="text-muted">
+                    <span style={{ color: 'red' }}>{getModulesText(assignment._id) || "No Modules"}</span> 
+                    | <b>Not available until</b> May 6 at 12:00am <br />
+                    <b>Due</b> May 13 at 11:59pm | 100 pts
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="d-flex align-items-center">
-            <div style={{ marginRight: '16px' }}>
-              <GreenCheckmark />
-            </div>
-            <IoEllipsisVertical style={{ fontSize: '1.5rem' }} />
-          </div>
-        </li>
-
-        {/* Assignment 2 */}
-        <li className="list-group-item p-3 d-flex justify-content-between align-items-center"
-            style={{ borderLeft: '5px solid green' }}>
-          <div className="d-flex align-items-center">
-            <PiDotsSixVerticalBold style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <MdEditNote style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <div>
-            <li className="wd-assignment-list-item">
-              <a className="wd-assignment-link"
-                href="#/Kanbas/Courses/Assignments/Editor">
-                A2
-              </a>
-            </li>
-              <div className="text-muted">
-                <span style={{ color: 'red' }}>Multiple Modules</span> | <b>Not available until</b> May 13 at 12:00am <br />
-                <b>Due</b> May 20 at 11:59pm | 100 pts
+              <div className="d-flex align-items-center">
+                <div style={{ marginRight: '16px' }}>
+                  <GreenCheckmark />
+                </div>
+                <IoEllipsisVertical style={{ fontSize: '1.5rem' }} />
               </div>
-            </div>
-          </div>
-          <div className="d-flex align-items-center">
-            <div style={{ marginRight: '16px' }}>
-              <GreenCheckmark />
-            </div>
-            <IoEllipsisVertical style={{ fontSize: '1.5rem' }} />
-          </div>
-        </li>
-
-        {/* Assignment 3 */}
-        <li className="list-group-item p-3 d-flex justify-content-between align-items-center"
-            style={{ borderLeft: '5px solid green' }}>
-          <div className="d-flex align-items-center">
-            <PiDotsSixVerticalBold style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <MdEditNote style={{ marginRight: '10px', fontSize: '1.5rem' }} />
-            <div>
-            <li className="wd-assignment-list-item">
-              <a className="wd-assignment-link"
-                href="#/Kanbas/Courses/Assignments/Editor">
-                A2
-              </a>
             </li>
-              <div className="text-muted">
-                <span style={{ color: 'red' }}>Multiple Modules</span> | <b>Not available until</b> May 20 at 12:00am <br />
-                <b>Due</b> May 27 at 11:59pm | 100 pts
-              </div>
-            </div>
-          </div>
-          <div className="d-flex align-items-center">
-            <div style={{ marginRight: '16px' }}>
-              <GreenCheckmark />
-            </div>
-            <IoEllipsisVertical style={{ fontSize: '1.5rem' }} />
-          </div>
-        </li>
+          ))
+        ) : (
+          <li className="list-group-item p-3 text-center">No assignments available for this course.</li>
+        )}
       </ul>
     </div>
   );
